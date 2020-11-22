@@ -2,12 +2,12 @@ namespace FurnaceAssistant.Core
 {
     public class SensorReading
     {
-        public string Content { get; }
+        public string Measurement { get; }
         public bool IsValid { get; }
 
         public SensorReading(string content, bool isValid)
         {
-            Content = content;
+            Measurement = content;
             IsValid = isValid;
         }
     }

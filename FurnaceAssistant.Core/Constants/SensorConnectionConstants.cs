@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FurnaceAssistant.Core.Constants
 {
-    public class NetworkConnectionConstants
+    public class SensorConnectionConstants
     {
         public const string CONNECTION_FAILED_READING = "Error!";
     }

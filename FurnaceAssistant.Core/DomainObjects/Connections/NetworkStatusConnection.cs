@@ -28,7 +28,7 @@ namespace FurnaceAssistant.Core.Connections
 
             if (!result.IsSuccessStatusCode)
             {
-                return Encoding.ASCII.GetBytes(NetworkConnectionConstants.CONNECTION_FAILED_READING);
+                return Encoding.ASCII.GetBytes(SensorConnectionConstants.CONNECTION_FAILED_READING);
             }
 
             if (result.Content is null)

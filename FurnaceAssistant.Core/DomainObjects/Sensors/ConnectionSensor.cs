@@ -5,11 +5,11 @@ using FurnaceAssistant.Core.Sensors.Interfaces;
 
 namespace FurnaceAssistant.Core.Sensors
 {
-    public class NetworkConnectionSensor : ISensor
+    public class ConnectionSensor : ISensor
     {
         private readonly ISensorConnection _connection;
 
-        public NetworkConnectionSensor(ISensorConnection connection)
+        public ConnectionSensor(ISensorConnection connection)
         {
             _connection = connection;
         }
@@ -26,7 +26,7 @@ namespace FurnaceAssistant.Core.Sensors
         }
 
         private bool IsValid(byte[] bytes) =>
-            GetString(bytes) != NetworkConnectionConstants.CONNECTION_FAILED_READING;
+            bytes.Length > 0 && GetString(bytes) != SensorConnectionConstants.CONNECTION_FAILED_READING;
 
         private string GetString(byte[] bytes) => Encoding.ASCII.GetString(bytes);
     }

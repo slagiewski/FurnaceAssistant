@@ -17,17 +17,13 @@ namespace FurnaceAssistant.Console
             var timer = new Timer();
             var connection = new NetworkStatusConnection(
                 new HttpNetworkClient(new HttpClient()), new Uri("https://www.google.com"));
-            var sensor = new NetworkConnectionSensor(connection);
+            var sensor = new ConnectionSensor(connection);
             var timerFactory = new TimerFactory();
             var repository = new ReadingsRepository();
             var scheduler = new ReadScheduler(timerFactory, repository);
 
             var scheduledReadings = scheduler.ScheduleReadings(sensor, 15);
             
-            System.Console.ReadKey();
-
-            scheduledReadings.Cancel();
-
             System.Console.ReadKey();
         }
     }

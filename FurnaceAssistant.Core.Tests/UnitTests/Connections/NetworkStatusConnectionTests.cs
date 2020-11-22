@@ -39,7 +39,7 @@ namespace FurnaceAssistant.Core
             var response = await connection.ReadAsync();
 
             Assert.NotEqual(
-                NetworkConnectionConstants.CONNECTION_FAILED_READING,
+                SensorConnectionConstants.CONNECTION_FAILED_READING,
                 Encoding.ASCII.GetString(response)
                 );
         }
@@ -59,8 +59,8 @@ namespace FurnaceAssistant.Core
             var response = await connection.ReadAsync();
 
             Assert.Equal(
-            NetworkConnectionConstants.CONNECTION_FAILED_READING,
-            Encoding.ASCII.GetString(response)
+                SensorConnectionConstants.CONNECTION_FAILED_READING,
+                Encoding.ASCII.GetString(response)
             );
         }
     }
