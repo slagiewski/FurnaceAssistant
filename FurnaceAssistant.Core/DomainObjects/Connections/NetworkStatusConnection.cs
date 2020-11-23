@@ -3,6 +3,8 @@ using System.Text;
 using System.Threading.Tasks;
 using FurnaceAssistant.Core.Abstractions;
 using FurnaceAssistant.Core.Constants;
+using FurnaceAssistant.Core.DataModels;
+using FurnaceAssistant.Core.DataModels.Connection;
 
 namespace FurnaceAssistant.Core.Connections
 {
@@ -17,26 +19,30 @@ namespace FurnaceAssistant.Core.Connections
             _uriToCheck = uriToCheck;
         }
 
-        public async Task<byte[]> ReadAsync()
+        public async Task<ConnectionResponse> ReadAsync()
         {
             var result = await _client.GetAsync(_uriToCheck);
 
             if (result is null)
             {
-                throw new Exception($"{nameof(NetworkStatusConnection)}: result was null!");
+                return ConnectionResponse.Error(
+                    new ResponseError($"{nameof(NetworkStatusConnection)}: result was null!"));
             }
 
             if (!result.IsSuccessStatusCode)
             {
-                return Encoding.ASCII.GetBytes(SensorConnectionConstants.CONNECTION_FAILED_READING);
+                return ConnectionResponse.Error(
+                    new ResponseError(SensorConnectionConstants.CONNECTION_FAILED_READING));
             }
 
             if (result.Content is null)
             {
-                return Array.Empty<byte>();
+                return ConnectionResponse.Valid(string.Empty);
             }
 
-            return await result.Content?.ReadAsByteArrayAsync();
+            var content = await result.Content?.ReadAsByteArrayAsync();
+
+            return ConnectionResponse.Valid(Encoding.ASCII.GetString(content), content) ;
         }
     }
 }

@@ -3,6 +3,7 @@ using FurnaceAssistant.Core.Connections;
 using FurnaceAssistant.Core.Constants;
 using Moq;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -16,13 +17,12 @@ namespace FurnaceAssistant.Core
         private readonly Uri _uri = new Uri(@"https://www.google.com");
 
         [Fact]
-        public async Task NetworkStatusConnectionWithoutClientShouldThrowException()
+        public async Task NetworkStatusConnectionWithoutClientShouldReturnError()
         {
             var clientMock = new Mock<INetworkClient>();
             var connection = new NetworkStatusConnection(clientMock.Object, _uri);
 
-            await Assert.ThrowsAsync<Exception>(
-                async () => await connection.ReadAsync());
+            Assert.False((await connection.ReadAsync()).IsValid);
         }
 
         [Fact]
@@ -38,10 +38,8 @@ namespace FurnaceAssistant.Core
 
             var response = await connection.ReadAsync();
 
-            Assert.NotEqual(
-                SensorConnectionConstants.CONNECTION_FAILED_READING,
-                Encoding.ASCII.GetString(response)
-                );
+            Assert.True(response.IsValid);
+            Assert.Empty(response.Errors);
         }
 
         [Fact]
@@ -58,10 +56,8 @@ namespace FurnaceAssistant.Core
 
             var response = await connection.ReadAsync();
 
-            Assert.Equal(
-                SensorConnectionConstants.CONNECTION_FAILED_READING,
-                Encoding.ASCII.GetString(response)
-            );
+            Assert.False(response.IsValid);
+            Assert.Contains(SensorConnectionConstants.CONNECTION_FAILED_READING, response.Errors.Select(r => r.Message));
         }
     }
 }

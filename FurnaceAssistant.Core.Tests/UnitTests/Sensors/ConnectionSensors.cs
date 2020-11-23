@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Threading.Tasks;
 using FurnaceAssistant.Core.Constants;
+using FurnaceAssistant.Core.DataModels.Connection;
 using FurnaceAssistant.Core.Sensors;
 using Moq;
 using Xunit;
@@ -14,7 +15,8 @@ namespace FurnaceAssistant.Core.Tests.UnitTests.Sensors
         {
             var networkConnectionMock = new Mock<ISensorConnection>();
             networkConnectionMock.Setup(connection => connection.ReadAsync())
-                .ReturnsAsync(Encoding.ASCII.GetBytes(SensorConnectionConstants.CONNECTION_FAILED_READING));
+                .ReturnsAsync(ConnectionResponse.Error(
+                    new ResponseError(SensorConnectionConstants.CONNECTION_FAILED_READING)));
             var sensor = new ConnectionSensor(networkConnectionMock.Object);
 
             var reading = await sensor.ReadAsync();
@@ -27,7 +29,7 @@ namespace FurnaceAssistant.Core.Tests.UnitTests.Sensors
         {
             var networkConnectionMock = new Mock<ISensorConnection>();
             networkConnectionMock.Setup(connection => connection.ReadAsync())
-                .ReturnsAsync(Encoding.ASCII.GetBytes("Message!"));
+                .ReturnsAsync(ConnectionResponse.Valid("Message!"));
             var sensor = new ConnectionSensor(networkConnectionMock.Object);
 
             var reading = await sensor.ReadAsync();
